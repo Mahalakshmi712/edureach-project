@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduReach Student Dashboard">
+    <meta name="theme-color" content="#6366F1">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icons/icon-192x192.png">
+    
+    <!-- Poppins Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    <title>Student Dashboard - EduReach</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-section h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1F2937;
+            font-size: 16px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-section h2 {
+            font-size: 32px;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card.courses .stat-icon {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+        }
+
+        .stat-card.quizzes .stat-icon {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .stat-card.attendance .stat-icon {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+
+        .stat-card.progress .stat-icon {
+            background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        .view-all-btn {
+            color: #6366F1;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .view-all-btn:hover {
+            color: #8B5CF6;
+        }
+
+        /* Course List */
+        .course-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #F9FAFB;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .course-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 16px;
+        }
+
+        .course-info {
+            flex: 1;
+        }
+
+        .course-name {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .course-teacher {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .course-progress {
+            width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: #6366F1;
+        }
+
+        /* Upcoming Classes */
+        .class-item {
+            padding: 16px;
+            border-left: 4px solid #6366F1;
+            background: #F9FAFB;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .class-time {
+            font-size: 12px;
+            color: #6366F1;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .class-name {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .class-teacher {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .join-btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 8px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="logo-section">
+            <h1>📚 EduReach</h1>
+        </div>
+        <div class="user-section">
+            <div class="user-info">
+                <div class="user-name" id="userName">Student Name</div>
+                <div class="user-role">Student</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2>👋 Welcome back, <span id="welcomeName">Student</span>!</h2>
+            <p>Ready to continue your learning journey today?</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card courses">
+                <div class="stat-icon">📖</div>
+                <div class="stat-value">6</div>
+                <div class="stat-label">Enrolled Courses</div>
+            </div>
+            <div class="stat-card quizzes">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Completed Quizzes</div>
+            </div>
+            <div class="stat-card attendance">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">85%</div>
+                <div class="stat-label">Attendance Rate</div>
+            </div>
+            <div class="stat-card progress">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">78%</div>
+                <div class="stat-label">Overall Progress</div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- My Courses -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📚 My Courses</h3>
+                    <a href="#" class="view-all-btn">View All →</a>
+                </div>
+                <div class="course-list">
+                    <!-- Mathematics Course -->
+                    <div class="course-item" onclick="openCourse('Mathematics')">
+                        <div class="course-icon" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">📐</div>
+                        <div class="course-info">
+                            <div class="course-name">Mathematics</div>
+                            <div class="course-teacher">Prof. Rajesh Kumar</div>
+                        </div>
+                        <div class="course-progress">85%</div>
+                    </div>
+
+                    <!-- Physics Course -->
+                    <div class="course-item" onclick="openCourse('Physics')">
+                        <div class="course-icon" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">⚛️</div>
+                        <div class="course-info">
+                            <div class="course-name">Physics</div>
+                            <div class="course-teacher">Dr. Priya Sharma</div>
+                        </div>
+                        <div class="course-progress">72%</div>
+                    </div>
+
+                    <!-- Chemistry Course -->
+                    <div class="course-item" onclick="openCourse('Chemistry')">
+                        <div class="course-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">🧪</div>
+                        <div class="course-info">
+                            <div class="course-name">Chemistry</div>
+                            <div class="course-teacher">Prof. Amit Patel</div>
+                        </div>
+                        <div class="course-progress">90%</div>
+                    </div>
+
+                    <!-- Computer Science Course -->
+                    <div class="course-item" onclick="openCourse('Computer Science')">
+                        <div class="course-icon" style="background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);">💻</div>
+                        <div class="course-info">
+                            <div class="course-name">Computer Science</div>
+                            <div class="course-teacher">Prof. Sneha Reddy</div>
+                        </div>
+                        <div class="course-progress">65%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Classes -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🕐 Upcoming Classes</h3>
+                </div>
+                <div class="class-list">
+                    <div class="class-item">
+                        <div class="class-time">⏰ Today, 10:00 AM</div>
+                        <div class="class-name">Mathematics - Calculus</div>
+                        <div class="class-teacher">Prof. Rajesh Kumar</div>
+                        <button class="join-btn" onclick="joinClass('Mathematics - Calculus')">Join Now</button>
+                    </div>
+                    <div class="class-item">
+                        <div class="class-time">⏰ Today, 2:00 PM</div>
+                        <div class="class-name">Physics - Thermodynamics</div>
+                        <div class="class-teacher">Dr. Priya Sharma</div>
+                        <button class="join-btn" onclick="joinClass('Physics - Thermodynamics')">Join Now</button>
+                    </div>
+                    <div class="class-item">
+                        <div class="class-time">⏰ Tomorrow, 9:00 AM</div>
+                        <div class="class-name">Chemistry - Organic Chemistry</div>
+                        <div class="class-teacher">Prof. Amit Patel</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">⚡ Quick Actions</h3>
+            </div>
+            <div class="quick-actions">
+                <button class="action-btn" onclick="openFeature('chatbot')">
+                    🤖 AI Chatbot
+                </button>
+                <button class="action-btn" onclick="openFeature('voice-notes')">
+                    🎤 Voice to Notes
+                </button>
+                <button class="action-btn" onclick="openFeature('quiz')">
+                    📝 Take Quiz
+                </button>
+                <button class="action-btn" onclick="openFeature('simulations')">
+                    🔬 Simulations
+                </button>
+                <button class="action-btn" onclick="openFeature('materials')">
+                    📖 Study Materials
+                </button>
+                <button class="action-btn" onclick="openFeature('assignments')">
+                    📋 Assignments
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data
+        window.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('edureach_user') || '{}');
+            
+            if (!user.loggedIn) {
+                // Not logged in, redirect to login
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Display user name
+            const userName = user.username || 'Student';
+            document.getElementById('userName').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+            document.getElementById('welcomeName').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+        });
+
+        // Open Course Details
+function openCourse(courseName) {
+    window.location.href = 'course-details.html?course=' + encodeURIComponent(courseName);
+}
+
+// Join Live Class
+function joinClass(className) {
+    window.location.href = 'live-class.html?class=' + encodeURIComponent(className);
+}
+
+// Open Features
+function openFeature(feature) {
+    // Open chatbot directly
+    if (feature === 'chatbot') {
+        window.location.href = 'ai-chatbot.html';
+        return;
+    }
+    
+    // Other features still show alerts
+    const messages = {
+        'voice-notes': '🎤 Voice to Notes\n\nRecord your voice and convert to text.\nComing soon!',
+        'quiz': '📝 Take Quiz\n\nSelect a course to see available quizzes.\nQuiz system already built!',
+        'simulations': '🔬 Interactive Simulations\n\nPhysics, Chemistry & Circuit simulations.\nComing soon!',
+        'materials': '📖 Study Materials\n\nAccess all your course materials.\nClick on a course to view materials!',
+        'assignments': '📋 Assignments\n\nView and submit your assignments.\nComing soon!'
+    };
+    
+    alert(messages[feature] || 'Feature coming soon!');
+}
+
+// Logout function
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('edureach_user');
+        window.location.href = 'index.html';
+    }
+}
+    </script>
+</body>
+</html>

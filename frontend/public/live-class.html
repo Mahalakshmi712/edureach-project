@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366F1">
+    <title>Live Class - EduReach</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #1F2937;
+        }
+
+        .back-btn:hover {
+            background: #F3F4F6;
+        }
+
+        .class-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .class-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        .class-meta {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .end-btn {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .end-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Container */
+        .container {
+            flex: 1;
+            margin: 24px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Jitsi Container */
+        #jitsi-container {
+            flex: 1;
+            min-height: 600px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .loading-screen.hidden {
+            display: none;
+        }
+
+        .loading-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .loading-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #E5E7EB;
+            border-top-color: #6366F1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Info Panel */
+        .info-panel {
+            background: #F9FAFB;
+            padding: 16px 24px;
+            border-top: 2px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .control-btn {
+            background: white;
+            border: 2px solid #E5E7EB;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-btn:hover {
+            border-color: #6366F1;
+            background: #F3F4F6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .class-meta {
+                display: none;
+            }
+
+            .container {
+                margin: 12px;
+            }
+
+            #jitsi-container {
+                min-height: 400px;
+            }
+
+            .info-panel {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <button class="back-btn" onclick="leaveClass()">← Back</button>
+            <div class="class-info">
+                <div class="class-title" id="classTitle">Mathematics - Calculus</div>
+                <div class="class-meta" id="classMeta">Prof. Rajesh Kumar</div>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                Live Now
+            </div>
+            <button class="end-btn" onclick="endClass()">End Class</button>
+        </div>
+    </nav>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Jitsi Container -->
+        <div id="jitsi-container">
+            <!-- Loading Screen -->
+            <div class="loading-screen" id="loadingScreen">
+                <div class="loading-icon">🎥</div>
+                <div class="loading-text">Connecting to Live Class...</div>
+                <div class="loading-subtext">Setting up your video conference</div>
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="info-text">
+                💡 Tip: Use headphones for better audio quality
+            </div>
+            <div class="controls">
+                <button class="control-btn" onclick="toggleFullscreen()">
+                    🖥️ Fullscreen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jitsi Meet API -->
+    <script src="https://meet.jit.si/external_api.js"></script>
+
+    <script>
+        let jitsiApi = null;
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const className = urlParams.get('class') || 'Mathematics - Calculus';
+        const roomName = 'EduReach-' + className.replace(/\s+/g, '-').toLowerCase();
+
+        // Get user info
+        const user = JSON.parse(localStorage.getItem('edureach_user') || '{}');
+        const displayName = user.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : 'Guest User';
+        const userRole = user.role || 'student';
+
+        // Update page
+        document.getElementById('classTitle').textContent = className;
+
+        // Initialize Jitsi Meet (Based on your working code!)
+        function initializeJitsi() {
+            // Check if Jitsi API is loaded
+            if (!window.JitsiMeetExternalAPI) {
+                console.error("❌ Jitsi API not loaded");
+                alert('Error loading video conference. Please refresh the page.');
+                return;
+            }
+
+            const domain = "meet.jit.si";
+            const options = {
+                roomName: roomName || "SIH_LiveDemoRoom",
+                parentNode: document.getElementById('jitsi-container'),
+                width: "100%",
+                height: "100%",
+                userInfo: { 
+                    displayName: displayName || "Guest User" 
+                },
+                configOverwrite: {
+                    startWithAudioMuted: false,
+                    startWithVideoMuted: false,
+                    enableWelcomePage: false,
+                    prejoinPageEnabled: false,
+                },
+                interfaceConfigOverwrite: {
+                    TOOLBAR_BUTTONS: [
+                        'microphone', 'camera', 'closedcaptions', 'desktop', 
+                        'fullscreen', 'fodeviceselection', 'hangup', 
+                        'chat', 'raisehand', 'videoquality', 'filmstrip', 
+                        'tileview', 'settings'
+                    ],
+                    SHOW_JITSI_WATERMARK: false,
+                    SHOW_WATERMARK_FOR_GUESTS: false,
+                }
+            };
+
+            // Create Jitsi instance
+            jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+
+            // Event: Joined meeting
+            jitsiApi.addEventListener("videoConferenceJoined", () => {
+                console.log("✅ Joined the meeting");
+                hideLoadingScreen();
+            });
+
+            // Event: Left meeting
+            jitsiApi.addEventListener("videoConferenceLeft", () => {
+                console.log("👋 Left the meeting");
+                leaveClass();
+            });
+
+            // Event: Ready to close
+            jitsiApi.addEventListener("readyToClose", () => {
+                leaveClass();
+            });
+        }
+
+        // Hide loading screen
+        function hideLoadingScreen() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 1000);
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            const container = document.querySelector('.container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Leave class
+        function leaveClass() {
+            if (confirm('Are you sure you want to leave the class?')) {
+                if (jitsiApi) {
+                    jitsiApi.dispose();
+                }
+                
+                // Redirect based on role
+                if (userRole === 'teacher') {
+                    window.location.href = 'teacher-dashboard.html';
+                } else {
+                    window.location.href = 'student-dashboard.html';
+                }
+            }
+        }
+
+        // End class (teacher only)
+        function endClass() {
+            if (userRole !== 'teacher') {
+                alert('Only teachers can end the class!');
+                return;
+            }
+
+            if (confirm('End class for all participants?\n\nThis will disconnect everyone.')) {
+                if (jitsiApi) {
+                    jitsiApi.executeCommand('hangup');
+                }
+                window.location.href = 'teacher-dashboard.html';
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            if (!user.loggedIn) {
+                alert('Please login to join the class!');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize Jitsi
+            console.log('🚀 Initializing Jitsi Meet...');
+            initializeJitsi();
+        });
+
+        // Prevent accidental page close
+        window.addEventListener('beforeunload', (e) => {
+            if (jitsiApi) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>

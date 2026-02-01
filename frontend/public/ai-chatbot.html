@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366F1">
+    <title>AI Chatbot - EduReach</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #F3F4F6;
+        }
+
+        .logo-section h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .chat-title {
+            font-size: 18px;
+            color: #1F2937;
+            font-weight: 600;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .bot-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 16px;
+        }
+
+        .welcome-section h2 {
+            font-size: 28px;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            color: #6B7280;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* Suggested Questions */
+        .suggested-questions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .suggestion-btn {
+            background: #F9FAFB;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #1F2937;
+        }
+
+        .suggestion-btn:hover {
+            border-color: #6366F1;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            transform: translateY(-2px);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 500px;
+            display: none;
+        }
+
+        .chat-messages.active {
+            display: block;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            margin-right: 12px;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            margin-left: 12px;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message.bot .message-bubble {
+            background: #F9FAFB;
+            color: #1F2937;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #9CA3AF;
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: #F9FAFB;
+            border-radius: 16px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #9CA3AF;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Input Area */
+        .input-area {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        #messageInput {
+            width: 100%;
+            padding: 14px 50px 14px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #messageInput:focus {
+            border-color: #6366F1;
+        }
+
+        .attach-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        .attach-btn:hover {
+            opacity: 1;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #E5E7EB;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            color: #6B7280;
+            transition: all 0.3s;
+        }
+
+        .quick-action-btn:hover {
+            border-color: #6366F1;
+            color: #6366F1;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .suggested-questions {
+                grid-template-columns: 1fr;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .send-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <button class="back-btn" onclick="goBack()">← Back</button>
+        <div class="logo-section">
+            <h1>📚 EduReach</h1>
+        </div>
+        <div class="chat-title">AI Assistant</div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Welcome Section -->
+        <div class="welcome-section" id="welcomeSection">
+            <div class="bot-avatar">🤖</div>
+            <h2>Hi! I'm your AI Study Assistant</h2>
+            <p>Ask me anything about your courses, homework, or study topics. I'm here to help you learn!</p>
+            
+            <div class="suggested-questions">
+                <button class="suggestion-btn" onclick="askQuestion('What is the derivative of x²?')">
+                    📐 What is the derivative of x²?
+                </button>
+                <button class="suggestion-btn" onclick="askQuestion('Explain photosynthesis')">
+                    🌱 Explain photosynthesis
+                </button>
+                <button class="suggestion-btn" onclick="askQuestion('What is Newton\'s first law?')">
+                    ⚛️ What is Newton's first law?
+                </button>
+                <button class="suggestion-btn" onclick="askQuestion('Help me with my calculus homework')">
+                    📚 Help me with my calculus homework
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="message-avatar" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">🤖</div>
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Ask me anything..."
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button class="attach-btn" onclick="attachFile()" title="Attach file">📎</button>
+            </div>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                <span>Send</span>
+                <span>📤</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Knowledge base for the AI chatbot
+        const knowledgeBase = {
+            // Mathematics
+            'derivative': {
+                keywords: ['derivative', 'differentiation', 'dx', 'calculus'],
+                response: "The derivative represents the rate of change of a function. For example:\n\n• Derivative of x² is 2x\n• Derivative of x³ is 3x²\n• Power rule: d/dx(xⁿ) = nxⁿ⁻¹\n\nWould you like me to explain a specific derivative?"
+            },
+            'integral': {
+                keywords: ['integral', 'integration', 'antiderivative'],
+                response: "Integration is the reverse of differentiation. For example:\n\n• ∫2x dx = x² + C\n• ∫x² dx = x³/3 + C\n• The constant C is important!\n\nNeed help with a specific integral?"
+            },
+            'limit': {
+                keywords: ['limit', 'limits', 'approach'],
+                response: "Limits describe the behavior of functions as they approach a certain value.\n\nExample: lim(x→2) of (x²-4)/(x-2) = 4\n\nLimits are fundamental to calculus and help us understand continuity and derivatives."
+            },
+
+            // Physics
+            'photosynthesis': {
+                keywords: ['photosynthesis', 'plant', 'chlorophyll'],
+                response: "Photosynthesis is how plants make food:\n\n6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂\n\n1. Plants absorb sunlight\n2. Chlorophyll captures light energy\n3. Carbon dioxide + water → glucose + oxygen\n4. This happens in chloroplasts\n\nPlants are basically solar-powered food factories! 🌱"
+            },
+            'newton': {
+                keywords: ['newton', 'law', 'motion', 'force'],
+                response: "Newton's Laws of Motion:\n\n1️⃣ First Law (Inertia): Objects stay at rest or in motion unless acted upon by a force\n\n2️⃣ Second Law: F = ma (Force = mass × acceleration)\n\n3️⃣ Third Law: For every action, there's an equal and opposite reaction\n\nWhich law would you like to explore more?"
+            },
+            'velocity': {
+                keywords: ['velocity', 'speed', 'acceleration'],
+                response: "Velocity vs Speed:\n\n• Speed: How fast (scalar)\n• Velocity: Speed + direction (vector)\n• Acceleration: Change in velocity\n\nFormula: v = d/t (velocity = distance/time)\n\nExample: A car going 60 km/h north has velocity, not just speed!"
+            },
+
+            // Chemistry
+            'atom': {
+                keywords: ['atom', 'atomic', 'element'],
+                response: "An atom is the smallest unit of matter:\n\n🔴 Nucleus (center):\n  • Protons (+)\n  • Neutrons (neutral)\n\n⚪ Electrons (-) orbit the nucleus\n\nAtoms combine to form molecules!\n\nWhat element are you curious about?"
+            },
+            'periodic': {
+                keywords: ['periodic', 'table', 'elements'],
+                response: "The Periodic Table organizes all elements:\n\n• Rows = Periods (electron shells)\n• Columns = Groups (similar properties)\n• Left side = Metals\n• Right side = Non-metals\n\nElements in the same group behave similarly!"
+            },
+
+            // Computer Science
+            'algorithm': {
+                keywords: ['algorithm', 'code', 'programming'],
+                response: "An algorithm is a step-by-step solution:\n\n1. Input: What data you need\n2. Process: Steps to solve\n3. Output: The result\n\nExample: Recipe for cookies is an algorithm!\n\nWant to learn about specific algorithms like sorting or searching?"
+            },
+            'loop': {
+                keywords: ['loop', 'for', 'while', 'iteration'],
+                response: "Loops repeat code:\n\n• For loop: When you know how many times\n• While loop: Until condition is false\n• Do-while: At least once\n\nExample:\nfor i in range(5):\n    print(i)\n\nPrints: 0, 1, 2, 3, 4"
+            },
+
+            // General
+            'homework': {
+                keywords: ['homework', 'assignment', 'help'],
+                response: "I'd love to help with your homework! 📚\n\nPlease tell me:\n1. What subject?\n2. What topic?\n3. Specific question?\n\nI can explain concepts, show examples, and guide you step-by-step!"
+            },
+            'study': {
+                keywords: ['study', 'exam', 'test', 'preparation'],
+                response: "Study tips for success:\n\n1️⃣ Review regularly (don't cram!)\n2️⃣ Practice problems\n3️⃣ Take breaks (Pomodoro: 25 min work, 5 min break)\n4️⃣ Teach others (best way to learn)\n5️⃣ Get enough sleep\n\nWhat subject are you preparing for?"
+            }
+        };
+
+        // Find best response
+        function findResponse(message) {
+            message = message.toLowerCase();
+            
+            // Check each knowledge entry
+            for (let key in knowledgeBase) {
+                const entry = knowledgeBase[key];
+                for (let keyword of entry.keywords) {
+                    if (message.includes(keyword)) {
+                        return entry.response;
+                    }
+                }
+            }
+            
+            // Default responses for common queries
+            if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                return "Hello! 👋 I'm your AI study assistant. How can I help you learn today?";
+            }
+            
+            if (message.includes('thank')) {
+                return "You're welcome! 😊 Feel free to ask me anything else!";
+            }
+            
+            if (message.includes('who are you') || message.includes('what are you')) {
+                return "I'm an AI-powered study assistant built into EduReach! 🤖 I'm here to help you understand concepts, solve problems, and succeed in your courses. What would you like to learn?";
+            }
+            
+            // Generic helpful response
+            return "I understand you're asking about: \"" + message + "\"\n\nI can help with:\n• Mathematics (calculus, algebra, geometry)\n• Physics (motion, energy, forces)\n• Chemistry (atoms, reactions, elements)\n• Computer Science (programming, algorithms)\n\nCould you rephrase your question or ask about a specific topic? I'm here to help! 📚";
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Hide welcome, show chat
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('chatMessages').classList.add('active');
+            
+            // Add user message
+            addMessage(message, 'user');
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Simulate AI response delay
+            setTimeout(() => {
+                const response = findResponse(message);
+                hideTyping();
+                addMessage(response, 'bot');
+            }, 1000 + Math.random() * 1000);
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+            
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            if (sender === 'bot') {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-bubble">${text}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                    <div class="message-avatar">👤</div>
+                `;
+            }
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('active');
+        }
+
+        // Hide typing indicator
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('active');
+        }
+
+        // Handle Enter key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Ask suggested question
+        function askQuestion(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+
+        // Attach file
+        function attachFile() {
+            alert('📎 File Upload\n\nComing soon! You will be able to:\n• Upload PDFs for analysis\n• Share images for visual questions\n• Attach homework files\n\nFor now, just type your question!');
+        }
+
+        // Go back
+        function goBack() {
+            window.location.href = 'student-dashboard.html';
+        }
+
+        // Auto-focus input
+        document.getElementById('messageInput').focus();
+    </script>
+</body>
+</html>

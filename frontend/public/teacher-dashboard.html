@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366F1">
+    <title>Teacher Dashboard - EduReach</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-section h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1F2937;
+            font-size: 16px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-section h2 {
+            font-size: 32px;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card.courses .stat-icon {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+        }
+
+        .stat-card.students .stat-icon {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .stat-card.classes .stat-icon {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+
+        .stat-card.quizzes .stat-icon {
+            background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Card */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Course Item */
+        .course-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #F9FAFB;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .course-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+        }
+
+        .course-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 16px;
+        }
+
+        .course-info {
+            flex: 1;
+        }
+
+        .course-name {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .course-meta {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .action-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .edit-icon {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .delete-icon {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* Student List */
+        .student-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: #F9FAFB;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #1F2937;
+            font-size: 14px;
+        }
+
+        .student-email {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .student-score {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .score-good {
+            color: #10B981;
+        }
+
+        .score-average {
+            color: #F59E0B;
+        }
+
+        .score-poor {
+            color: #EF4444;
+        }
+
+        /* Class Item */
+        .class-item {
+            padding: 16px;
+            border-left: 4px solid #6366F1;
+            background: #F9FAFB;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .class-time {
+            font-size: 12px;
+            color: #6366F1;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .class-name {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .class-students {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 8px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="logo-section">
+            <h1>📚 EduReach</h1>
+        </div>
+        <div class="user-section">
+            <div class="user-info">
+                <div class="user-name" id="userName">Teacher Name</div>
+                <div class="user-role">Teacher</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2>👋 Welcome back, <span id="welcomeName">Teacher</span>!</h2>
+            <p>Manage your courses, students, and classes from your dashboard.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card courses">
+                <div class="stat-icon">📚</div>
+                <div class="stat-value">4</div>
+                <div class="stat-label">My Courses</div>
+            </div>
+            <div class="stat-card students">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value">156</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card classes">
+                <div class="stat-icon">🎥</div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Live Classes</div>
+            </div>
+            <div class="stat-card quizzes">
+                <div class="stat-icon">📝</div>
+                <div class="stat-value">18</div>
+                <div class="stat-label">Quizzes Created</div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- My Courses -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📚 My Courses</h3>
+                    <button class="add-btn" onclick="createCourse()">+ New Course</button>
+                </div>
+                <div class="course-list">
+                    <div class="course-item" onclick="manageCourse('Mathematics')">
+                        <div class="course-icon" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">📐</div>
+                        <div class="course-info">
+                            <div class="course-name">Mathematics</div>
+                            <div class="course-meta">156 students • 12 modules</div>
+                        </div>
+                        <div class="course-actions">
+                            <div class="action-icon edit-icon" onclick="event.stopPropagation(); editCourse('Mathematics')">✏️</div>
+                            <div class="action-icon delete-icon" onclick="event.stopPropagation(); deleteCourse('Mathematics')">🗑️</div>
+                        </div>
+                    </div>
+
+                    <div class="course-item" onclick="manageCourse('Physics')">
+                        <div class="course-icon" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">⚛️</div>
+                        <div class="course-info">
+                            <div class="course-name">Physics</div>
+                            <div class="course-meta">142 students • 10 modules</div>
+                        </div>
+                        <div class="course-actions">
+                            <div class="action-icon edit-icon" onclick="event.stopPropagation(); editCourse('Physics')">✏️</div>
+                            <div class="action-icon delete-icon" onclick="event.stopPropagation(); deleteCourse('Physics')">🗑️</div>
+                        </div>
+                    </div>
+
+                    <div class="course-item" onclick="manageCourse('Chemistry')">
+                        <div class="course-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">🧪</div>
+                        <div class="course-info">
+                            <div class="course-name">Chemistry</div>
+                            <div class="course-meta">138 students • 14 modules</div>
+                        </div>
+                        <div class="course-actions">
+                            <div class="action-icon edit-icon" onclick="event.stopPropagation(); editCourse('Chemistry')">✏️</div>
+                            <div class="action-icon delete-icon" onclick="event.stopPropagation(); deleteCourse('Chemistry')">🗑️</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Students -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🏆 Top Students</h3>
+                </div>
+                <div class="student-list">
+                    <div class="student-item">
+                        <div class="student-avatar">AK</div>
+                        <div class="student-info">
+                            <div class="student-name">Arjun Kumar</div>
+                            <div class="student-email">Mathematics</div>
+                        </div>
+                        <div class="student-score score-good">95%</div>
+                    </div>
+
+                    <div class="student-item">
+                        <div class="student-avatar">PS</div>
+                        <div class="student-info">
+                            <div class="student-name">Priya Sharma</div>
+                            <div class="student-email">Physics</div>
+                        </div>
+                        <div class="student-score score-good">92%</div>
+                    </div>
+
+                    <div class="student-item">
+                        <div class="student-avatar">RV</div>
+                        <div class="student-info">
+                            <div class="student-name">Rahul Verma</div>
+                            <div class="student-email">Chemistry</div>
+                        </div>
+                        <div class="student-score score-good">90%</div>
+                    </div>
+
+                    <div class="student-item">
+                        <div class="student-avatar">SK</div>
+                        <div class="student-info">
+                            <div class="student-name">Sneha Khan</div>
+                            <div class="student-email">Mathematics</div>
+                        </div>
+                        <div class="student-score score-average">88%</div>
+                    </div>
+
+                    <div class="student-item">
+                        <div class="student-avatar">AM</div>
+                        <div class="student-info">
+                            <div class="student-name">Amit Mehta</div>
+                            <div class="student-email">Physics</div>
+                        </div>
+                        <div class="student-score score-average">85%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Classes -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">🕐 Upcoming Classes</h3>
+                <button class="add-btn" onclick="scheduleClass()">+ Schedule Class</button>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div class="class-item">
+                        <div class="class-time">⏰ Today, 10:00 AM</div>
+                        <div class="class-name">Mathematics - Calculus</div>
+                        <div class="class-students">156 students enrolled</div>
+                        <button class="start-btn" onclick="startClass('Mathematics - Calculus')">Start Class</button>
+                    </div>
+
+                    <div class="class-item">
+                        <div class="class-time">⏰ Today, 2:00 PM</div>
+                        <div class="class-name">Physics - Thermodynamics</div>
+                        <div class="class-students">142 students enrolled</div>
+                        <button class="start-btn" onclick="startClass('Physics - Thermodynamics')">Start Class</button>
+                    </div>
+
+                    <div class="class-item">
+                        <div class="class-time">⏰ Tomorrow, 9:00 AM</div>
+                        <div class="class-name">Chemistry - Organic Chemistry</div>
+                        <div class="class-students">138 students enrolled</div>
+                    </div>
+                </div>
+
+                <div class="card" style="box-shadow: none; padding: 0;">
+                    <div class="card-header" style="margin-bottom: 16px;">
+                        <h3 class="card-title">⚡ Quick Actions</h3>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="createQuiz()">
+                            📝 Create Quiz
+                        </button>
+                        <button class="action-btn" onclick="uploadMaterial()">
+                            📄 Upload Material
+                        </button>
+                        <button class="action-btn" onclick="viewAnalytics()">
+                            📊 View Analytics
+                        </button>
+                        <button class="action-btn" onclick="viewStudents()">
+                            👥 View Students
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data
+        window.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('edureach_user') || '{}');
+            
+            if (!user.loggedIn) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Check if user is teacher
+            if (user.role !== 'teacher') {
+                alert('Access denied! This page is for teachers only.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const userName = user.username || 'Teacher';
+            document.getElementById('userName').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+            document.getElementById('welcomeName').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
+        });
+
+        // Manage Course
+        function manageCourse(courseName) {
+            alert('📚 Managing Course: ' + courseName + '\n\nOpening course management page...\n\nHere you can:\n- Add/Edit modules\n- Upload videos\n- Create quizzes\n- View student progress');
+            // Future: window.location.href = 'teacher-course.html?course=' + encodeURIComponent(courseName);
+        }
+
+        // Create Course
+        function createCourse() {
+            alert('➕ Create New Course\n\nOpening course creation form...\n\nYou can:\n- Set course name\n- Add description\n- Upload materials\n- Create modules');
+        }
+
+        // Edit Course
+        function editCourse(courseName) {
+            alert('✏️ Edit Course: ' + courseName + '\n\nOpening editor...');
+        }
+
+        // Delete Course
+        function deleteCourse(courseName) {
+            if (confirm('Are you sure you want to delete ' + courseName + '?\n\nThis will remove all modules, quizzes, and student progress!')) {
+                alert('🗑️ Course deleted: ' + courseName);
+            }
+        }
+
+        // Schedule Class
+        function scheduleClass() {
+            alert('📅 Schedule New Class\n\nOpening scheduler...\n\nYou can:\n- Choose date & time\n- Select course\n- Add description\n- Enable recording');
+        }
+
+        // Start Class
+        function startClass(className) {
+    window.location.href = 'live-class.html?class=' + encodeURIComponent(className);
+}
+
+        // Create Quiz
+        function createQuiz() {
+            alert('📝 Create New Quiz\n\nOpening quiz builder...\n\nYou can:\n- Add questions\n- Set timer\n- Choose course\n- Set passing grade');
+        }
+
+        // Upload Material
+        function uploadMaterial() {
+            alert('📄 Upload Study Material\n\nOpening file uploader...\n\nSupported formats:\n- PDF, DOCX\n- Videos (MP4, WEBM)\n- Images (JPG, PNG)');
+        }
+
+        // View Analytics
+        function viewAnalytics() {
+            alert('📊 View Analytics\n\nOpening analytics dashboard...\n\nYou can see:\n- Student performance\n- Quiz statistics\n- Attendance reports\n- Course completion rates');
+        }
+
+        // View Students
+        function viewStudents() {
+            alert('👥 View All Students\n\nOpening student list...\n\nYou can:\n- See all enrolled students\n- View individual progress\n- Send messages\n- Export reports');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('edureach_user');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

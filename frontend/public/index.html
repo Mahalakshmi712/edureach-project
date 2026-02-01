@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduReach - Remote Classroom for Rural Colleges">
+    <meta name="theme-color" content="#4A90E2">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <title>EduReach - Remote Learning Platform</title>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="spinner"></div>
+        <p>Loading EduReach...</p>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Navigation will be injected here -->
+        <nav id="navbar"></nav>
+        
+        <!-- Main Content Area -->
+        <main id="main-content" class="main-content">
+            <!-- Login Screen (Default) -->
+            <section id="login-section" class="auth-section">
+                <div class="auth-card">
+                    <img src="assets/images/logo.png" alt="EduReach Logo" class="logo" onerror="this.style.display='none'">
+                    <h1>Welcome to EduReach</h1>
+                    <p class="subtitle">Remote Learning for Rural Education</p>
+                    
+                    <form id="login-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="user-type">I am a:</label>
+                            <select id="user-type" required>
+                                <option value="">Select Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="student">Student</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="username">Username/Email</label>
+                            <input type="text" id="username" placeholder="Enter your username" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        
+                        <div class="form-links">
+                            <a href="#" id="forgot-password">Forgot Password?</a>
+                        </div>
+                    </form>
+                    
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <label>Language:</label>
+                        <select id="language">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी (Hindi)</option>
+                            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                            <option value="te">తెలుగు (Telugu)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer id="footer" class="app-footer">
+            <p>&copy; 2024 EduReach. Made with ❤️ for Rural Education</p>
+        </footer>
+    </div>
+
+    <!-- Offline Notification -->
+    <div id="offline-notification" class="offline-notification" style="display: none;">
+        <p>⚠️ You are offline. Some features may be limited.</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../src/config/constants.js"></script>
+    <script src="../src/utils/indexedDB.js"></script>
+    <script src="../src/utils/auth.js"></script>
+    <script src="../src/utils/networkDetector.js"></script>
+    <script src="../src/utils/i18n.js"></script>
+    <script src="../src/components/common/Navbar.js"></script>
+    
+    <!-- Main App Script -->
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered:', reg))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+
+        // App Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 1000);
+
+            // Initialize network detector
+            if (typeof NetworkDetector !== 'undefined') {
+                NetworkDetector.init();
+            }
+
+            // Initialize language
+            if (typeof i18n !== 'undefined') {
+                i18n.init();
+            }
+
+            // Login form handler
+            // Login form handler
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const userType = document.getElementById('user-type').value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    // Validation
+    if (!userType) {
+        alert('Please select your role (Admin/Teacher/Student)');
+        return;
+    }
+    
+    if (!username || !password) {
+        alert('Please enter both username and password');
+        return;
+    }
+    
+    // Show loading
+    const loginBtn = document.querySelector('.btn-primary');
+    const originalText = loginBtn.textContent;
+    loginBtn.textContent = 'Logging in...';
+    loginBtn.disabled = true;
+    
+    // Simple test credentials (temporary - replace with real API later)
+    const testCredentials = {
+        'admin': { username: 'admin', password: 'admin123', role: 'admin' },
+        'teacher': { username: 'teacher', password: 'teacher123', role: 'teacher' },
+        'student': { username: 'student', password: 'student123', role: 'student' }
+    };
+    
+    // Check credentials
+    setTimeout(() => {
+        const cred = testCredentials[userType];
+        
+        if (cred && username === cred.username && password === cred.password) {
+            // Success! Store user info
+            localStorage.setItem('edureach_user', JSON.stringify({
+                username: username,
+                role: userType,
+                loggedIn: true
+            }));
+            
+            // Redirect based on role
+            switch(userType) {
+                case 'admin':
+    alert('✅ Login Successful! Redirecting to Admin Dashboard...');
+    window.location.href = 'admin-dashboard.html';
+    break;
+                case 'teacher':
+    alert('✅ Login Successful! Redirecting to Teacher Dashboard...');
+    window.location.href = 'teacher-dashboard.html';
+    break;
+                case 'student':
+                    alert('✅ Login Successful! Redirecting to Student Dashboard...');
+                    window.location.href = 'student-dashboard.html';
+                    break;
+            }
+        } else {
+            alert('❌ Login Failed!\n\nPlease use these test credentials:\n\nAdmin: admin / admin123\nTeacher: teacher / teacher123\nStudent: student / student123');
+        }
+        
+        // Reset button
+        loginBtn.textContent = originalText;
+        loginBtn.disabled = false;
+    }, 1000);
+});
+        });
+    </script>
+</body>
+</html>

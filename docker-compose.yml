@@ -1,0 +1,146 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: edureach-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: edureach_password
+      MONGO_INITDB_DATABASE: edureach
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - edureach-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: edureach-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=mongodb://admin:edureach_password@mongodb:27017
+      - MONGODB_DB_NAME=edureach
+      - REDIS_URL=redis://redis:6379
+      - APP_ENV=production
+    volumes:
+      - ./backend:/app
+      - backend_uploads:/app/uploads
+      - ai_models:/app/ai-models
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - edureach-network
+
+  # Frontend (served via nginx)
+  frontend:
+    image: nginx:alpine
+    container_name: edureach-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./frontend/public:/usr/share/nginx/html:ro
+      - ./frontend/src:/usr/share/nginx/html/src:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - edureach-network
+
+  # Redis (for caching and sessions)
+  redis:
+    image: redis:7-alpine
+    container_name: edureach-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - edureach-network
+
+  # Jitsi Meet (for live classes)
+  jitsi-web:
+    image: jitsi/web:latest
+    container_name: edureach-jitsi-web
+    restart: unless-stopped
+    ports:
+      - "8443:443"
+    environment:
+      - ENABLE_AUTH=1
+      - ENABLE_GUESTS=1
+      - ENABLE_LETSENCRYPT=0
+      - PUBLIC_URL=https://meet.edureach.local
+    volumes:
+      - ./jitsi-server/jitsi-config/web:/config
+    depends_on:
+      - jitsi-prosody
+      - jitsi-jicofo
+      - jitsi-jvb
+    networks:
+      edureach-network:
+        aliases:
+          - meet.edureach.local
+
+  jitsi-prosody:
+    image: jitsi/prosody:latest
+    container_name: edureach-jitsi-prosody
+    restart: unless-stopped
+    environment:
+      - ENABLE_AUTH=1
+      - ENABLE_GUESTS=1
+    volumes:
+      - ./jitsi-server/jitsi-config/prosody:/config
+    networks:
+      - edureach-network
+
+  jitsi-jicofo:
+    image: jitsi/jicofo:latest
+    container_name: edureach-jitsi-jicofo
+    restart: unless-stopped
+    environment:
+      - ENABLE_AUTH=1
+    volumes:
+      - ./jitsi-server/jitsi-config/jicofo:/config
+    depends_on:
+      - jitsi-prosody
+    networks:
+      - edureach-network
+
+  jitsi-jvb:
+    image: jitsi/jvb:latest
+    container_name: edureach-jitsi-jvb
+    restart: unless-stopped
+    ports:
+      - "10000:10000/udp"
+    environment:
+      - ENABLE_COLIBRI_WEBSOCKET=1
+    volumes:
+      - ./jitsi-server/jitsi-config/jvb:/config
+    depends_on:
+      - jitsi-prosody
+    networks:
+      - edureach-network
+
+networks:
+  edureach-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+  redis_data:
+  backend_uploads:
+  ai_models:
