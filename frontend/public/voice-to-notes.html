@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice to Notes - EduReach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px 24px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #1F2937;
+        }
+        .back-btn:hover { background: #F3F4F6; }
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .welcome {
+            text-align: center;
+        }
+        .welcome h2 {
+            font-size: 32px;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        .welcome p { color: #6B7280; font-size: 16px; }
+        .mic-container {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .mic-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            font-size: 48px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        .mic-btn:hover {
+            transform: scale(1.05);
+        }
+        .mic-btn.recording {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5);
+            }
+        }
+        .status {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        .hint {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        .transcript {
+            background: #F9FAFB;
+            padding: 24px;
+            border-radius: 12px;
+            min-height: 200px;
+            margin-bottom: 20px;
+            border: 2px solid #E5E7EB;
+            line-height: 1.8;
+            color: #1F2937;
+            white-space: pre-wrap;
+        }
+        .transcript.empty {
+            color: #9CA3AF;
+            font-style: italic;
+        }
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn.secondary {
+            background: #E5E7EB;
+            color: #4B5563;
+        }
+        .btn.secondary:hover:not(:disabled) {
+            background: #D1D5DB;
+        }
+        .btn.danger {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+        }
+        .notes-header {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 20px;
+        }
+        .note-item {
+            background: #F9FAFB;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .note-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+        }
+        .note-title {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+        .note-preview {
+            font-size: 14px;
+            color: #6B7280;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .note-meta {
+            font-size: 12px;
+            color: #9CA3AF;
+            margin-top: 8px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9CA3AF;
+        }
+        @media (max-width: 640px) {
+            .actions { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn" onclick="goBack()">← Back</button>
+        <div class="logo"><h1>📚 EduReach</h1></div>
+        <div class="nav-title">Voice to Notes</div>
+    </nav>
+
+    <div class="container">
+        <div class="card welcome">
+            <h2>🎤 Voice to Notes</h2>
+            <p>Record your voice and convert it to text automatically</p>
+        </div>
+
+        <div class="card">
+            <div class="mic-container">
+                <button class="mic-btn" id="micBtn" onclick="toggleRecording()">🎤</button>
+                <div class="status" id="status">Ready to Record</div>
+                <div class="hint" id="hint">Click the microphone to start recording</div>
+            </div>
+
+            <label for="langSelect">🌍 Select Language:</label>
+            <select id="langSelect">
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="es-ES">Spanish</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="zh-CN">Chinese (Mandarin)</option>
+                <option value="ja-JP">Japanese</option>
+                <option value="ar-SA">Arabic</option>
+            </select>
+
+            <div class="transcript empty" id="transcript">Your transcribed text will appear here...</div>
+
+            <div class="actions">
+                <button class="btn" id="saveBtn" onclick="saveNote()" disabled>💾 Save Note</button>
+                <button class="btn secondary" id="copyBtn" onclick="copyText()" disabled>📋 Copy Text</button>
+                <button class="btn secondary" id="downloadBtn" onclick="downloadNote()" disabled>⬇️ Download</button>
+                <button class="btn danger" id="clearBtn" onclick="clearText()" disabled>🗑️ Clear</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="notes-header">📝 Saved Notes</div>
+            <div id="notesList">
+                <div class="empty-state">No saved notes yet. Start recording to create your first note!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let recognition = null;
+        let isRecording = false;
+        let finalTranscript = '';
+        let savedNotes = JSON.parse(localStorage.getItem('voice_notes') || '[]');
+
+        function goBack() {
+            window.location.href = 'student-dashboard.html';
+        }
+
+        // Initialize Speech Recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.maxAlternatives = 1;
+
+                recognition.onstart = () => {
+                    console.log('Recording started');
+                    isRecording = true;
+                    updateUI();
+                };
+
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript + ' ';
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+                    
+                    displayTranscript(finalTranscript + interimTranscript);
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    if (event.error === 'not-allowed') {
+                        alert('❌ Microphone access denied!\n\nPlease allow microphone permissions in your browser settings.');
+                    } else if (event.error === 'no-speech') {
+                        console.log('No speech detected, continuing...');
+                    } else {
+                        alert('Error: ' + event.error);
+                    }
+                    stopRecording();
+                };
+
+                recognition.onend = () => {
+                    if (isRecording) {
+                        // Restart if still supposed to be recording
+                        try {
+                            recognition.start();
+                        } catch (e) {
+                            console.log('Recognition restart failed:', e);
+                        }
+                    }
+                };
+
+                return true;
+            } else {
+                alert('❌ Speech recognition is not supported in your browser.\n\nPlease use Chrome or Edge.');
+                return false;
+            }
+        }
+
+        function toggleRecording() {
+            if (!recognition && !initSpeechRecognition()) {
+                return;
+            }
+
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            const lang = document.getElementById('langSelect').value;
+            recognition.lang = lang;
+            
+            try {
+                recognition.start();
+                console.log('Starting recognition with language:', lang);
+            } catch (error) {
+                console.error('Error starting recognition:', error);
+                alert('Failed to start recording. Please try again.');
+            }
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            if (recognition) {
+                recognition.stop();
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            const micBtn = document.getElementById('micBtn');
+            const status = document.getElementById('status');
+            const hint = document.getElementById('hint');
+
+            if (isRecording) {
+                micBtn.className = 'mic-btn recording';
+                micBtn.textContent = '⏹️';
+                status.textContent = 'Recording...';
+                hint.textContent = 'Click to stop recording';
+            } else {
+                micBtn.className = 'mic-btn';
+                micBtn.textContent = '🎤';
+                status.textContent = 'Ready to Record';
+                hint.textContent = 'Click the microphone to start recording';
+            }
+        }
+
+        function displayTranscript(text) {
+            const transcriptEl = document.getElementById('transcript');
+            
+            if (text && text.trim().length > 0) {
+                transcriptEl.textContent = text;
+                transcriptEl.className = 'transcript';
+            } else {
+                transcriptEl.textContent = 'Your transcribed text will appear here...';
+                transcriptEl.className = 'transcript empty';
+            }
+
+            // Enable/disable buttons
+            const hasText = text && text.trim().length > 0;
+            document.getElementById('saveBtn').disabled = !hasText;
+            document.getElementById('copyBtn').disabled = !hasText;
+            document.getElementById('downloadBtn').disabled = !hasText;
+            document.getElementById('clearBtn').disabled = !hasText;
+        }
+
+        function saveNote() {
+            const text = document.getElementById('transcript').textContent;
+            if (!text || text.trim().length === 0 || text === 'Your transcribed text will appear here...') {
+                alert('No text to save!');
+                return;
+            }
+
+            const note = {
+                id: Date.now(),
+                title: text.substring(0, 50) + (text.length > 50 ? '...' : ''),
+                content: text,
+                date: new Date().toISOString(),
+                language: document.getElementById('langSelect').value
+            };
+
+            savedNotes.unshift(note);
+            localStorage.setItem('voice_notes', JSON.stringify(savedNotes));
+            
+            displayNotes();
+            alert('✅ Note saved successfully!');
+        }
+
+        function copyText() {
+            const text = document.getElementById('transcript').textContent;
+            if (text === 'Your transcribed text will appear here...') {
+                alert('No text to copy!');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Text copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy text: ' + err);
+            });
+        }
+
+        function downloadNote() {
+            const text = document.getElementById('transcript').textContent;
+            if (text === 'Your transcribed text will appear here...') {
+                alert('No text to download!');
+                return;
+            }
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `voice-note-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function clearText() {
+            if (confirm('Clear the current transcript?')) {
+                finalTranscript = '';
+                displayTranscript('');
+            }
+        }
+
+        function displayNotes() {
+            const notesList = document.getElementById('notesList');
+            
+            if (savedNotes.length === 0) {
+                notesList.innerHTML = '<div class="empty-state">No saved notes yet. Start recording to create your first note!</div>';
+                return;
+            }
+
+            notesList.innerHTML = savedNotes.map(note => {
+                const date = new Date(note.date);
+                const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                
+                return `
+                    <div class="note-item" onclick="loadNote(${note.id})">
+                        <div class="note-title">${note.title}</div>
+                        <div class="note-preview">${note.content}</div>
+                        <div class="note-meta">
+                            📅 ${dateStr} • 🌍 ${getLanguageName(note.language)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadNote(id) {
+            const note = savedNotes.find(n => n.id === id);
+            if (note) {
+                finalTranscript = note.content;
+                displayTranscript(note.content);
+                document.getElementById('langSelect').value = note.language;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function getLanguageName(code) {
+            const names = {
+                'en-US': 'English (US)',
+                'en-GB': 'English (UK)',
+                'es-ES': 'Spanish',
+                'fr-FR': 'French',
+                'de-DE': 'German',
+                'hi-IN': 'Hindi',
+                'zh-CN': 'Chinese',
+                'ja-JP': 'Japanese',
+                'ar-SA': 'Arabic'
+            };
+            return names[code] || code;
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            displayNotes();
+            
+            // Check if user is logged in
+            const user = JSON.parse(localStorage.getItem('edureach_user') || '{}');
+            if (!user.loggedIn) {
+                alert('Please login to use Voice to Notes!');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

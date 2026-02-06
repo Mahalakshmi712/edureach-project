@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Simulations - EduReach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px 24px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #1F2937;
+        }
+        .back-btn:hover { background: #F3F4F6; }
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .welcome {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .welcome h2 {
+            font-size: 32px;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        .welcome p { color: #6B7280; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .category {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .physics { background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); }
+        .chemistry { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+        .math { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); }
+        .sim-item {
+            background: #F9FAFB;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+        }
+        .sim-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+        .modal.active { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+        }
+        .modal-body { padding: 24px; }
+        #canvas {
+            width: 100%;
+            height: 400px;
+            background: #F9FAFB;
+            border-radius: 12px;
+            border: 2px solid #E5E7EB;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn" onclick="window.location.href='student-dashboard.html'">← Back</button>
+        <div class="logo"><h1>📚 EduReach</h1></div>
+        <div style="width:80px;"></div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h2>🔬 Interactive Simulations</h2>
+            <p>Explore physics, chemistry, and mathematics!</p>
+        </div>
+
+        <div class="grid">
+            <div class="category">
+                <div class="category-header">
+                    <div class="icon physics">⚛️</div>
+                    <h3>Physics</h3>
+                </div>
+                <div class="sim-item" onclick="openSim('pendulum')">
+                    <span>🎯 Simple Pendulum</span><span>→</span>
+                </div>
+                <div class="sim-item" onclick="openSim('projectile')">
+                    <span>⚡ Projectile Motion</span><span>→</span>
+                </div>
+                <div class="sim-item" onclick="openSim('waves')">
+                    <span>🌊 Wave Motion</span><span>→</span>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header">
+                    <div class="icon chemistry">🧪</div>
+                    <h3>Chemistry</h3>
+                </div>
+                <div class="sim-item" onclick="openSim('ph')">
+                    <span>🧪 pH Scale</span><span>→</span>
+                </div>
+                <div class="sim-item" onclick="openSim('atom')">
+                    <span>⚛️ Atomic Structure</span><span>→</span>
+                </div>
+                <div class="sim-item" onclick="openSim('molecule')">
+                    <span>🧬 Molecules</span><span>→</span>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header">
+                    <div class="icon math">📐</div>
+                    <h3>Mathematics</h3>
+                </div>
+                <div class="sim-item" onclick="openSim('graph')">
+                    <span>📊 Function Graphing</span><span>→</span>
+                </div>
+                <div class="sim-item" onclick="openSim('geometry')">
+                    <span>📐 Geometry</span><span>→</span>
+                </div>
+                <div class="sim-item" onclick="openSim('trig')">
+                    <span>📏 Trigonometry</span><span>→</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="title">Simulation</h3>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <canvas id="canvas" width="800" height="400"></canvas>
+                <div class="controls" id="controls"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let canvas, ctx, anim;
+
+        function openSim(type) {
+            document.getElementById('modal').classList.add('active');
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            
+            if (type === 'pendulum') runPendulum();
+            else if (type === 'projectile') runProjectile();
+            else if (type === 'waves') runWaves();
+            else if (type === 'graph') runGraph();
+            else if (type === 'ph') runPH();
+            else if (type === 'atom') runAtom();
+            else if (type === 'geometry') runGeometry();
+            else if (type === 'trig') runTrig();
+            else runPlaceholder(type);
+        }
+
+        function closeModal() {
+            if (anim) cancelAnimationFrame(anim);
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function runPendulum() {
+            document.getElementById('title').textContent = '🎯 Simple Pendulum';
+            let angle = Math.PI/4, vel = 0, len = 150, g = 0.5;
+            
+            document.getElementById('controls').innerHTML = `
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.reset='1'">Reset</button>
+            `;
+            
+            function draw() {
+                if (canvas.dataset.reset === '1') {
+                    angle = Math.PI/4;
+                    vel = 0;
+                    canvas.dataset.reset = '0';
+                }
+                
+                ctx.fillStyle = '#F9FAFB';
+                ctx.fillRect(0, 0, 800, 400);
+                
+                let cx = 400, cy = 80;
+                let bx = cx + len * Math.sin(angle);
+                let by = cy + len * Math.cos(angle);
+                
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(bx, by);
+                ctx.strokeStyle = '#1F2937';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI*2);
+                ctx.fillStyle = '#EF4444';
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(bx, by, 20, 0, Math.PI*2);
+                ctx.fillStyle = '#6366F1';
+                ctx.fill();
+                
+                let acc = (-g / len) * Math.sin(angle);
+                vel += acc;
+                vel *= 0.995;
+                angle += vel;
+                
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runProjectile() {
+            document.getElementById('title').textContent = '⚡ Projectile Motion';
+            let x = 50, y = 350, vx = 5, vy = -15, flying = false;
+            
+            document.getElementById('controls').innerHTML = `
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.launch='1'">Launch</button>
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.reset='1'">Reset</button>
+            `;
+            
+            function draw() {
+                if (canvas.dataset.launch === '1') {
+                    flying = true;
+                    canvas.dataset.launch = '0';
+                }
+                if (canvas.dataset.reset === '1') {
+                    x = 50; y = 350; flying = false;
+                    canvas.dataset.reset = '0';
+                }
+                
+                ctx.fillStyle = '#E0F2FE';
+                ctx.fillRect(0, 0, 800, 400);
+                ctx.fillStyle = '#10B981';
+                ctx.fillRect(0, 370, 800, 30);
+                
+                if (flying) {
+                    x += vx;
+                    y += vy;
+                    vy += 0.5;
+                    if (y >= 350) { y = 350; flying = false; }
+                    if (x >= 800) { x = 50; y = 350; flying = false; }
+                }
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, Math.PI*2);
+                ctx.fillStyle = '#EF4444';
+                ctx.fill();
+                
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runWaves() {
+            document.getElementById('title').textContent = '🌊 Wave Motion';
+            let offset = 0;
+            
+            document.getElementById('controls').innerHTML = '';
+            
+            function draw() {
+                ctx.fillStyle = '#F9FAFB';
+                ctx.fillRect(0, 0, 800, 400);
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 200);
+                ctx.lineTo(800, 200);
+                ctx.strokeStyle = '#E5E7EB';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5,5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.beginPath();
+                for (let x = 0; x < 800; x++) {
+                    let y = 200 + Math.sin((x * 0.02) + offset) * 50;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = '#6366F1';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                offset += 0.1;
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runGraph() {
+            document.getElementById('title').textContent = '📊 Function Graphing';
+            
+            document.getElementById('controls').innerHTML = `
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.func='sin'">sin(x)</button>
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.func='cos'">cos(x)</button>
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.func='x2'">x²</button>
+            `;
+            
+            canvas.dataset.func = 'sin';
+            
+            function draw() {
+                let func = canvas.dataset.func || 'sin';
+                
+                ctx.fillStyle = '#F9FAFB';
+                ctx.fillRect(0, 0, 800, 400);
+                
+                ctx.strokeStyle = '#1F2937';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, 200);
+                ctx.lineTo(800, 200);
+                ctx.moveTo(400, 0);
+                ctx.lineTo(400, 400);
+                ctx.stroke();
+                
+                ctx.strokeStyle = '#6366F1';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                for (let px = 0; px < 800; px++) {
+                    let x = (px - 400) / 50;
+                    let y;
+                    
+                    if (func === 'sin') y = Math.sin(x);
+                    else if (func === 'cos') y = Math.cos(x);
+                    else if (func === 'x2') y = x * x * 0.1;
+                    
+                    let py = 200 - y * 50;
+                    if (px === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+                
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runPH() {
+            document.getElementById('title').textContent = '🧪 pH Scale';
+            let ph = 7;
+            
+            document.getElementById('controls').innerHTML = `
+                <button class="btn" onclick="let c=this.parentElement.parentElement.querySelector('canvas'); c.dataset.ph=Math.max(0,parseFloat(c.dataset.ph||7)-1)">⬇️ Acid</button>
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.ph=7">Neutral</button>
+                <button class="btn" onclick="let c=this.parentElement.parentElement.querySelector('canvas'); c.dataset.ph=Math.min(14,parseFloat(c.dataset.ph||7)+1)">⬆️ Base</button>
+            `;
+            
+            canvas.dataset.ph = '7';
+            
+            function draw() {
+                ph = parseFloat(canvas.dataset.ph || 7);
+                
+                ctx.fillStyle = '#F9FAFB';
+                ctx.fillRect(0, 0, 800, 400);
+                
+                let colors = ['#DC2626','#EF4444','#F97316','#FB923C','#FBBF24','#FDE047','#BEF264','#86EFAC','#10B981','#5EEAD4','#67E8F9','#7DD3FC','#93C5FD','#A5B4FC','#C4B5FD'];
+                ctx.fillStyle = colors[Math.floor(ph)] || '#10B981';
+                ctx.fillRect(300, 100, 200, 250);
+                
+                ctx.strokeStyle = '#1F2937';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(300, 100, 200, 250);
+                
+                ctx.fillStyle = '#1F2937';
+                ctx.font = 'bold 48px Poppins';
+                ctx.textAlign = 'center';
+                ctx.fillText('pH ' + ph.toFixed(1), 400, 70);
+                
+                let label = ph < 3 ? 'Strong Acid' : ph < 6 ? 'Weak Acid' : ph > 11 ? 'Strong Base' : ph > 8 ? 'Weak Base' : 'Neutral';
+                ctx.font = 'bold 24px Poppins';
+                ctx.fillText(label, 400, 380);
+                
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runAtom() {
+            document.getElementById('title').textContent = '⚛️ Atomic Structure';
+            let angle = 0;
+            
+            document.getElementById('controls').innerHTML = '';
+            
+            function draw() {
+                ctx.fillStyle = '#F9FAFB';
+                ctx.fillRect(0, 0, 800, 400);
+                
+                let cx = 400, cy = 200;
+                
+                ctx.fillStyle = '#EF4444';
+                ctx.beginPath();
+                ctx.arc(cx, cy, 30, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 12px Poppins';
+                ctx.textAlign = 'center';
+                ctx.fillText('P:6', cx, cy-5);
+                ctx.fillText('N:6', cx, cy+10);
+                
+                [80, 140].forEach((r, i) => {
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r, 0, Math.PI*2);
+                    ctx.strokeStyle = '#E5E7EB';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5,5]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    let count = i === 0 ? 2 : 4;
+                    for (let j = 0; j < count; j++) {
+                        let a = angle + (j * Math.PI*2 / count);
+                        let ex = cx + r * Math.cos(a);
+                        let ey = cy + r * Math.sin(a);
+                        ctx.beginPath();
+                        ctx.arc(ex, ey, 8, 0, Math.PI*2);
+                        ctx.fillStyle = '#3B82F6';
+                        ctx.fill();
+                    }
+                });
+                
+                angle += 0.02;
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runGeometry() {
+            document.getElementById('title').textContent = '📐 Geometry';
+            
+            document.getElementById('controls').innerHTML = `
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.shape='triangle'">▲ Triangle</button>
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.shape='square'">■ Square</button>
+                <button class="btn" onclick="this.parentElement.parentElement.querySelector('canvas').dataset.shape='circle'">● Circle</button>
+            `;
+            
+            canvas.dataset.shape = 'triangle';
+            
+            function draw() {
+                let shape = canvas.dataset.shape || 'triangle';
+                
+                ctx.fillStyle = '#F9FAFB';
+                ctx.fillRect(0, 0, 800, 400);
+                
+                ctx.fillStyle = '#6366F1';
+                ctx.strokeStyle = '#1F2937';
+                ctx.lineWidth = 3;
+                
+                ctx.beginPath();
+                if (shape === 'triangle') {
+                    ctx.moveTo(400, 100);
+                    ctx.lineTo(250, 300);
+                    ctx.lineTo(550, 300);
+                    ctx.closePath();
+                } else if (shape === 'square') {
+                    ctx.rect(250, 100, 300, 300);
+                } else if (shape === 'circle') {
+                    ctx.arc(400, 200, 150, 0, Math.PI*2);
+                }
+                ctx.fill();
+                ctx.stroke();
+                
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runTrig() {
+            document.getElementById('title').textContent = '📏 Trigonometry';
+            let angle = 45;
+            
+            document.getElementById('controls').innerHTML = `
+                <input type="range" min="0" max="90" value="45" style="width:300px;" onchange="this.parentElement.parentElement.querySelector('canvas').dataset.angle=this.value">
+                <span>Angle: <strong id="angDisplay">45°</strong></span>
+            `;
+            
+            canvas.dataset.angle = '45';
+            
+            function draw() {
+                angle = parseFloat(canvas.dataset.angle || 45);
+                document.getElementById('angDisplay').textContent = angle + '°';
+                
+                ctx.fillStyle = '#F9FAFB';
+                ctx.fillRect(0, 0, 800, 400);
+                
+                let cx = 150, cy = 300, rad = angle * Math.PI / 180, hyp = 200;
+                let adj = hyp * Math.cos(rad);
+                let opp = hyp * Math.sin(rad);
+                
+                ctx.strokeStyle = '#1F2937';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + adj, cy);
+                ctx.lineTo(cx + adj, cy - opp);
+                ctx.closePath();
+                ctx.stroke();
+                
+                ctx.strokeStyle = '#6366F1';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + adj, cy - opp);
+                ctx.stroke();
+                
+                ctx.fillStyle = '#1F2937';
+                ctx.font = 'bold 16px Poppins';
+                ctx.textAlign = 'left';
+                ctx.fillText('sin = ' + Math.sin(rad).toFixed(3), 450, 100);
+                ctx.fillText('cos = ' + Math.cos(rad).toFixed(3), 450, 140);
+                ctx.fillText('tan = ' + Math.tan(rad).toFixed(3), 450, 180);
+                
+                anim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function runPlaceholder(type) {
+            document.getElementById('title').textContent = type;
+            ctx.fillStyle = '#F9FAFB';
+            ctx.fillRect(0, 0, 800, 400);
+            ctx.fillStyle = '#6B7280';
+            ctx.font = '32px Poppins';
+            ctx.textAlign = 'center';
+            ctx.fillText('Coming Soon!', 400, 200);
+            document.getElementById('controls').innerHTML = '';
+        }
+    </script>
+</body>
+</html>

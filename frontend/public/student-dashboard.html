@@ -560,19 +560,23 @@ function joinClass(className) {
 
 // Open Features
 function openFeature(feature) {
-    // Open chatbot directly
     if (feature === 'chatbot') {
         window.location.href = 'ai-chatbot.html';
         return;
     }
+    if (feature === 'simulations') {
+        window.location.href = 'simulations.html';
+        return;
+    }
+    if (feature === 'voice-notes') {
+        window.location.href = 'voice-to-notes.html';
+        return;
+    }
     
-    // Other features still show alerts
     const messages = {
-        'voice-notes': '🎤 Voice to Notes\n\nRecord your voice and convert to text.\nComing soon!',
-        'quiz': '📝 Take Quiz\n\nSelect a course to see available quizzes.\nQuiz system already built!',
-        'simulations': '🔬 Interactive Simulations\n\nPhysics, Chemistry & Circuit simulations.\nComing soon!',
-        'materials': '📖 Study Materials\n\nAccess all your course materials.\nClick on a course to view materials!',
-        'assignments': '📋 Assignments\n\nView and submit your assignments.\nComing soon!'
+        'quiz': '📝 Take Quiz\n\nSelect a course to see available quizzes.',
+        'materials': '📖 Study Materials\n\nClick on a course to view materials!',
+        'assignments': '📋 Assignments\n\nComing soon!'
     };
     
     alert(messages[feature] || 'Feature coming soon!');
