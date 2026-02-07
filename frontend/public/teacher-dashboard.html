@@ -22,7 +22,6 @@
             min-height: 100vh;
         }
 
-        /* Top Navigation */
         .top-nav {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -42,7 +41,11 @@
             gap: 12px;
         }
 
-        .logo-section h1 {
+        .logo {
+            font-size: 32px;
+        }
+
+        .logo-text h1 {
             font-size: 24px;
             background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
             -webkit-background-clip: text;
@@ -53,7 +56,7 @@
         .user-section {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
         }
 
         .user-info {
@@ -63,11 +66,11 @@
         .user-name {
             font-weight: 600;
             color: #1F2937;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .user-role {
-            font-size: 12px;
+            font-size: 13px;
             color: #6B7280;
         }
 
@@ -79,6 +82,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 14px;
             font-family: 'Poppins', sans-serif;
             transition: all 0.3s ease;
         }
@@ -88,34 +92,43 @@
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
         }
 
-        /* Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 24px;
         }
 
-        /* Welcome Section */
         .welcome-section {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border-radius: 16px;
             padding: 32px;
             margin-bottom: 24px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .welcome-section h2 {
-            font-size: 32px;
-            color: #1F2937;
-            margin-bottom: 8px;
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
 
-        .welcome-section p {
+        .welcome-title {
+            font-size: 28px;
+            color: #1F2937;
+            font-weight: 700;
+        }
+
+        .date-time {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        .welcome-text {
             color: #6B7280;
             font-size: 16px;
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -136,6 +149,13 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
 
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
         .stat-icon {
             width: 48px;
             height: 48px;
@@ -144,23 +164,6 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            margin-bottom: 12px;
-        }
-
-        .stat-card.courses .stat-icon {
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-        }
-
-        .stat-card.students .stat-icon {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        }
-
-        .stat-card.classes .stat-icon {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-        }
-
-        .stat-card.quizzes .stat-icon {
-            background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
         }
 
         .stat-value {
@@ -175,40 +178,87 @@
             font-size: 14px;
         }
 
-        /* Content Grid */
-        .content-grid {
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-actions-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
             margin-bottom: 24px;
         }
 
-        /* Card */
-        .card {
+        .quick-action-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .action-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .action-desc {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .courses-section {
             background: white;
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
         }
 
-        .card-header {
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .card-title {
+        .section-header h2 {
             font-size: 20px;
-            font-weight: 600;
+            font-weight: 700;
             color: #1F2937;
         }
 
-        .add-btn {
+        .add-course-btn {
             background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
@@ -217,50 +267,64 @@
             transition: all 0.3s ease;
         }
 
-        .add-btn:hover {
+        .add-course-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
 
-        /* Course Item */
-        .course-item {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 12px;
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
             background: #F9FAFB;
+            border-radius: 12px;
+            padding: 20px;
             transition: all 0.3s ease;
             cursor: pointer;
+            border: 2px solid transparent;
         }
 
-        .course-item:hover {
-            background: #F3F4F6;
-            transform: translateX(4px);
+        .course-card:hover {
+            border-color: #6366F1;
+            transform: translateY(-2px);
         }
 
-        .course-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
+        .course-header {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            margin-right: 16px;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
         }
 
-        .course-info {
-            flex: 1;
-        }
-
-        .course-name {
+        .course-title {
+            font-size: 18px;
             font-weight: 600;
             color: #1F2937;
             margin-bottom: 4px;
         }
 
-        .course-meta {
+        .course-code {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .course-icon {
+            font-size: 32px;
+        }
+
+        .course-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .course-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
             font-size: 13px;
             color: #6B7280;
         }
@@ -270,382 +334,266 @@
             gap: 8px;
         }
 
-        .action-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 16px;
-        }
-
-        .action-icon:hover {
-            transform: scale(1.1);
-        }
-
-        .edit-icon {
-            background: #DBEAFE;
-            color: #1E40AF;
-        }
-
-        .delete-icon {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        /* Student List */
-        .student-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            background: #F9FAFB;
-        }
-
-        .student-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            margin-right: 12px;
-        }
-
-        .student-info {
+        .course-btn {
             flex: 1;
-        }
-
-        .student-name {
-            font-weight: 600;
-            color: #1F2937;
-            font-size: 14px;
-        }
-
-        .student-email {
-            font-size: 12px;
-            color: #6B7280;
-        }
-
-        .student-score {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .score-good {
-            color: #10B981;
-        }
-
-        .score-average {
-            color: #F59E0B;
-        }
-
-        .score-poor {
-            color: #EF4444;
-        }
-
-        /* Class Item */
-        .class-item {
-            padding: 16px;
-            border-left: 4px solid #6366F1;
-            background: #F9FAFB;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .class-time {
-            font-size: 12px;
-            color: #6366F1;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .class-name {
-            font-weight: 600;
-            color: #1F2937;
-            margin-bottom: 4px;
-        }
-
-        .class-students {
-            font-size: 13px;
-            color: #6B7280;
-        }
-
-        .start-btn {
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-            color: white;
-            border: none;
             padding: 8px 16px;
             border-radius: 6px;
+            border: none;
             cursor: pointer;
             font-weight: 600;
             font-size: 13px;
-            margin-top: 8px;
             font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+        .btn-primary {
+            background: #6366F1;
             color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
 
-        .action-btn:hover {
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #1F2937;
+        }
+
+        .course-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
 
-        /* Responsive */
-        @media (max-width: 968px) {
-            .content-grid {
+        @media (max-width: 768px) {
+            .welcome-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .stats-grid {
+
+            .quick-actions-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .quick-actions {
+            .courses-grid {
                 grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .user-info {
-                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Top Navigation -->
     <nav class="top-nav">
         <div class="logo-section">
-            <h1>📚 EduReach</h1>
+            <div class="logo">📚</div>
+            <div class="logo-text">
+                <h1>EduReach</h1>
+            </div>
         </div>
         <div class="user-section">
             <div class="user-info">
-                <div class="user-name" id="userName">Teacher Name</div>
-                <div class="user-role">Teacher</div>
+                <div class="user-name" id="userName">Teacher</div>
+                <div class="user-role">Teacher Dashboard</div>
             </div>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </nav>
 
-    <!-- Main Container -->
     <div class="container">
         <!-- Welcome Section -->
         <div class="welcome-section">
-            <h2>👋 Welcome back, <span id="welcomeName">Teacher</span>!</h2>
-            <p>Manage your courses, students, and classes from your dashboard.</p>
+            <div class="welcome-header">
+                <div>
+                    <h2 class="welcome-title" id="welcomeTitle">Welcome back, Teacher! 👋</h2>
+                    <p class="welcome-text">Here's what's happening with your courses today</p>
+                </div>
+                <div class="date-time" id="dateTime"></div>
+            </div>
         </div>
 
         <!-- Stats Grid -->
         <div class="stats-grid">
-            <div class="stat-card courses">
-                <div class="stat-icon">📚</div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">
+                        📚
+                    </div>
+                </div>
                 <div class="stat-value">4</div>
-                <div class="stat-label">My Courses</div>
+                <div class="stat-label">Active Courses</div>
             </div>
-            <div class="stat-card students">
-                <div class="stat-icon">👥</div>
-                <div class="stat-value">156</div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                        👥
+                    </div>
+                </div>
+                <div class="stat-value">127</div>
                 <div class="stat-label">Total Students</div>
             </div>
-            <div class="stat-card classes">
-                <div class="stat-icon">🎥</div>
-                <div class="stat-value">24</div>
-                <div class="stat-label">Live Classes</div>
-            </div>
-            <div class="stat-card quizzes">
-                <div class="stat-icon">📝</div>
-                <div class="stat-value">18</div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
+                        📝
+                    </div>
+                </div>
+                <div class="stat-value">12</div>
                 <div class="stat-label">Quizzes Created</div>
             </div>
-        </div>
 
-        <!-- Content Grid -->
-        <div class="content-grid">
-            <!-- My Courses -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">📚 My Courses</h3>
-                    <button class="add-btn" onclick="createCourse()">+ New Course</button>
-                </div>
-                <div class="course-list">
-                    <div class="course-item" onclick="manageCourse('Mathematics')">
-                        <div class="course-icon" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">📐</div>
-                        <div class="course-info">
-                            <div class="course-name">Mathematics</div>
-                            <div class="course-meta">156 students • 12 modules</div>
-                        </div>
-                        <div class="course-actions">
-                            <div class="action-icon edit-icon" onclick="event.stopPropagation(); editCourse('Mathematics')">✏️</div>
-                            <div class="action-icon delete-icon" onclick="event.stopPropagation(); deleteCourse('Mathematics')">🗑️</div>
-                        </div>
-                    </div>
-
-                    <div class="course-item" onclick="manageCourse('Physics')">
-                        <div class="course-icon" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">⚛️</div>
-                        <div class="course-info">
-                            <div class="course-name">Physics</div>
-                            <div class="course-meta">142 students • 10 modules</div>
-                        </div>
-                        <div class="course-actions">
-                            <div class="action-icon edit-icon" onclick="event.stopPropagation(); editCourse('Physics')">✏️</div>
-                            <div class="action-icon delete-icon" onclick="event.stopPropagation(); deleteCourse('Physics')">🗑️</div>
-                        </div>
-                    </div>
-
-                    <div class="course-item" onclick="manageCourse('Chemistry')">
-                        <div class="course-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">🧪</div>
-                        <div class="course-info">
-                            <div class="course-name">Chemistry</div>
-                            <div class="course-meta">138 students • 14 modules</div>
-                        </div>
-                        <div class="course-actions">
-                            <div class="action-icon edit-icon" onclick="event.stopPropagation(); editCourse('Chemistry')">✏️</div>
-                            <div class="action-icon delete-icon" onclick="event.stopPropagation(); deleteCourse('Chemistry')">🗑️</div>
-                        </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);">
+                        ⏰
                     </div>
                 </div>
-            </div>
-
-            <!-- Top Students -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">🏆 Top Students</h3>
-                </div>
-                <div class="student-list">
-                    <div class="student-item">
-                        <div class="student-avatar">AK</div>
-                        <div class="student-info">
-                            <div class="student-name">Arjun Kumar</div>
-                            <div class="student-email">Mathematics</div>
-                        </div>
-                        <div class="student-score score-good">95%</div>
-                    </div>
-
-                    <div class="student-item">
-                        <div class="student-avatar">PS</div>
-                        <div class="student-info">
-                            <div class="student-name">Priya Sharma</div>
-                            <div class="student-email">Physics</div>
-                        </div>
-                        <div class="student-score score-good">92%</div>
-                    </div>
-
-                    <div class="student-item">
-                        <div class="student-avatar">RV</div>
-                        <div class="student-info">
-                            <div class="student-name">Rahul Verma</div>
-                            <div class="student-email">Chemistry</div>
-                        </div>
-                        <div class="student-score score-good">90%</div>
-                    </div>
-
-                    <div class="student-item">
-                        <div class="student-avatar">SK</div>
-                        <div class="student-info">
-                            <div class="student-name">Sneha Khan</div>
-                            <div class="student-email">Mathematics</div>
-                        </div>
-                        <div class="student-score score-average">88%</div>
-                    </div>
-
-                    <div class="student-item">
-                        <div class="student-avatar">AM</div>
-                        <div class="student-info">
-                            <div class="student-name">Amit Mehta</div>
-                            <div class="student-email">Physics</div>
-                        </div>
-                        <div class="student-score score-average">85%</div>
-                    </div>
-                </div>
+                <div class="stat-value">3</div>
+                <div class="stat-label">Pending Reviews</div>
             </div>
         </div>
 
-        <!-- Upcoming Classes -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">🕐 Upcoming Classes</h3>
-                <button class="add-btn" onclick="scheduleClass()">+ Schedule Class</button>
+        <!-- Quick Actions -->
+        <h2 class="section-title">⚡ Quick Actions</h2>
+        <div class="quick-actions-grid">
+            <div class="quick-action-card" onclick="window.location.href='quiz-builder.html'">
+                <div class="action-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
+                    📝
+                </div>
+                <div class="action-title">Create Quiz</div>
+                <div class="action-desc">Build custom quizzes</div>
             </div>
-            <div class="content-grid">
-                <div>
-                    <div class="class-item">
-                        <div class="class-time">⏰ Today, 10:00 AM</div>
-                        <div class="class-name">Mathematics - Calculus</div>
-                        <div class="class-students">156 students enrolled</div>
-                        <button class="start-btn" onclick="startClass('Mathematics - Calculus')">Start Class</button>
-                    </div>
 
-                    <div class="class-item">
-                        <div class="class-time">⏰ Today, 2:00 PM</div>
-                        <div class="class-name">Physics - Thermodynamics</div>
-                        <div class="class-students">142 students enrolled</div>
-                        <button class="start-btn" onclick="startClass('Physics - Thermodynamics')">Start Class</button>
-                    </div>
+            <div class="quick-action-card" onclick="alert('Upload Materials feature coming soon!')">
+                <div class="action-icon" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">
+                    📤
+                </div>
+                <div class="action-title">Upload Materials</div>
+                <div class="action-desc">Add study resources</div>
+            </div>
 
-                    <div class="class-item">
-                        <div class="class-time">⏰ Tomorrow, 9:00 AM</div>
-                        <div class="class-name">Chemistry - Organic Chemistry</div>
-                        <div class="class-students">138 students enrolled</div>
+            <div class="quick-action-card" onclick="alert('Grade Assignments feature coming soon!')">
+                <div class="action-icon" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                    ✅
+                </div>
+                <div class="action-title">Grade Assignments</div>
+                <div class="action-desc">Review submissions</div>
+            </div>
+
+            <div class="quick-action-card" onclick="alert('View Analytics feature coming soon!')">
+                <div class="action-icon" style="background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);">
+                    📊
+                </div>
+                <div class="action-title">View Analytics</div>
+                <div class="action-desc">Student performance</div>
+            </div>
+        </div>
+
+        <!-- My Courses -->
+        <div class="courses-section">
+            <div class="section-header">
+                <h2>📚 My Courses</h2>
+                <button class="add-course-btn" onclick="alert('Add new course feature coming soon!')">+ Add Course</button>
+            </div>
+
+            <div class="courses-grid">
+                <!-- Mathematics -->
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">Mathematics</div>
+                            <div class="course-code">MATH-101</div>
+                        </div>
+                        <div class="course-icon">📐</div>
+                    </div>
+                    <div class="course-stats">
+                        <div class="course-stat">
+                            <span>👥</span>
+                            <span>42 students</span>
+                        </div>
+                        <div class="course-stat">
+                            <span>📝</span>
+                            <span>5 quizzes</span>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="course-btn btn-primary" onclick="manageCourse('Mathematics')">Manage</button>
+                        <button class="course-btn btn-secondary" onclick="viewStudents('Mathematics')">Students</button>
                     </div>
                 </div>
 
-                <div class="card" style="box-shadow: none; padding: 0;">
-                    <div class="card-header" style="margin-bottom: 16px;">
-                        <h3 class="card-title">⚡ Quick Actions</h3>
+                <!-- Physics -->
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">Physics</div>
+                            <div class="course-code">PHYS-201</div>
+                        </div>
+                        <div class="course-icon">⚛️</div>
                     </div>
-                    <div class="quick-actions">
-                        <button class="action-btn" onclick="createQuiz()">
-                            📝 Create Quiz
-                        </button>
-                        <button class="action-btn" onclick="uploadMaterial()">
-                            📄 Upload Material
-                        </button>
-                        <button class="action-btn" onclick="viewAnalytics()">
-                            📊 View Analytics
-                        </button>
-                        <button class="action-btn" onclick="viewStudents()">
-                            👥 View Students
-                        </button>
+                    <div class="course-stats">
+                        <div class="course-stat">
+                            <span>👥</span>
+                            <span>35 students</span>
+                        </div>
+                        <div class="course-stat">
+                            <span>📝</span>
+                            <span>3 quizzes</span>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="course-btn btn-primary" onclick="manageCourse('Physics')">Manage</button>
+                        <button class="course-btn btn-secondary" onclick="viewStudents('Physics')">Students</button>
+                    </div>
+                </div>
+
+                <!-- Chemistry -->
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">Chemistry</div>
+                            <div class="course-code">CHEM-301</div>
+                        </div>
+                        <div class="course-icon">🧪</div>
+                    </div>
+                    <div class="course-stats">
+                        <div class="course-stat">
+                            <span>👥</span>
+                            <span>28 students</span>
+                        </div>
+                        <div class="course-stat">
+                            <span>📝</span>
+                            <span>2 quizzes</span>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="course-btn btn-primary" onclick="manageCourse('Chemistry')">Manage</button>
+                        <button class="course-btn btn-secondary" onclick="viewStudents('Chemistry')">Students</button>
+                    </div>
+                </div>
+
+                <!-- Computer Science -->
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">Computer Science</div>
+                            <div class="course-code">CS-401</div>
+                        </div>
+                        <div class="course-icon">💻</div>
+                    </div>
+                    <div class="course-stats">
+                        <div class="course-stat">
+                            <span>👥</span>
+                            <span>22 students</span>
+                        </div>
+                        <div class="course-stat">
+                            <span>📝</span>
+                            <span>2 quizzes</span>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="course-btn btn-primary" onclick="manageCourse('Computer Science')">Manage</button>
+                        <button class="course-btn btn-secondary" onclick="viewStudents('Computer Science')">Students</button>
                     </div>
                 </div>
             </div>
@@ -653,86 +601,43 @@
     </div>
 
     <script>
-        // Load user data
-        window.addEventListener('DOMContentLoaded', () => {
-            const user = JSON.parse(localStorage.getItem('edureach_user') || '{}');
-            
-            if (!user.loggedIn) {
-                window.location.href = 'index.html';
-                return;
-            }
+        // Get user info
+        const user = JSON.parse(localStorage.getItem('edureach_user') || '{}');
 
-            // Check if user is teacher
-            if (user.role !== 'teacher') {
-                alert('Access denied! This page is for teachers only.');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            const userName = user.username || 'Teacher';
-            document.getElementById('userName').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
-            document.getElementById('welcomeName').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
-        });
-
-        // Manage Course
-        function manageCourse(courseName) {
-            alert('📚 Managing Course: ' + courseName + '\n\nOpening course management page...\n\nHere you can:\n- Add/Edit modules\n- Upload videos\n- Create quizzes\n- View student progress');
-            // Future: window.location.href = 'teacher-course.html?course=' + encodeURIComponent(courseName);
+        // Check if logged in as teacher
+        if (!user.loggedIn || user.role !== 'teacher') {
+            alert('Please login as a teacher to access this page!');
+            window.location.href = 'index.html';
         }
 
-        // Create Course
-        function createCourse() {
-            alert('➕ Create New Course\n\nOpening course creation form...\n\nYou can:\n- Set course name\n- Add description\n- Upload materials\n- Create modules');
+        // Display username
+        document.getElementById('userName').textContent = user.username.charAt(0).toUpperCase() + user.username.slice(1);
+        document.getElementById('welcomeTitle').textContent = `Welcome back, ${user.username.charAt(0).toUpperCase() + user.username.slice(1)}! 👋`;
+
+        // Display current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('dateTime').textContent = now.toLocaleDateString('en-US', options);
         }
 
-        // Edit Course
-        function editCourse(courseName) {
-            alert('✏️ Edit Course: ' + courseName + '\n\nOpening editor...');
-        }
+        updateDateTime();
 
-        // Delete Course
-        function deleteCourse(courseName) {
-            if (confirm('Are you sure you want to delete ' + courseName + '?\n\nThis will remove all modules, quizzes, and student progress!')) {
-                alert('🗑️ Course deleted: ' + courseName);
-            }
-        }
-
-        // Schedule Class
-        function scheduleClass() {
-            alert('📅 Schedule New Class\n\nOpening scheduler...\n\nYou can:\n- Choose date & time\n- Select course\n- Add description\n- Enable recording');
-        }
-
-        // Start Class
-        function startClass(className) {
-    window.location.href = 'live-class.html?class=' + encodeURIComponent(className);
-}
-
-        // Create Quiz
-        function createQuiz() {
-            alert('📝 Create New Quiz\n\nOpening quiz builder...\n\nYou can:\n- Add questions\n- Set timer\n- Choose course\n- Set passing grade');
-        }
-
-        // Upload Material
-        function uploadMaterial() {
-            alert('📄 Upload Study Material\n\nOpening file uploader...\n\nSupported formats:\n- PDF, DOCX\n- Videos (MP4, WEBM)\n- Images (JPG, PNG)');
-        }
-
-        // View Analytics
-        function viewAnalytics() {
-            alert('📊 View Analytics\n\nOpening analytics dashboard...\n\nYou can see:\n- Student performance\n- Quiz statistics\n- Attendance reports\n- Course completion rates');
-        }
-
-        // View Students
-        function viewStudents() {
-            alert('👥 View All Students\n\nOpening student list...\n\nYou can:\n- See all enrolled students\n- View individual progress\n- Send messages\n- Export reports');
-        }
-
-        // Logout
+        // Logout function
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('edureach_user');
                 window.location.href = 'index.html';
             }
+        }
+
+        // Course management functions
+        function manageCourse(courseName) {
+            alert(`Managing ${courseName} course\n\nFeature coming soon!`);
+        }
+
+        function viewStudents(courseName) {
+            alert(`Viewing students in ${courseName}\n\nFeature coming soon!`);
         }
     </script>
 </body>

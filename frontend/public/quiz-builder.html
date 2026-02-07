@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Builder - EduReach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px 24px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #1F2937;
+        }
+        .back-btn:hover { background: #F3F4F6; }
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .header h1 {
+            font-size: 32px;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        .header p { color: #6B7280; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #F9FAFB;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #6366F1;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6B7280;
+            margin-top: 4px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6366F1;
+        }
+        .question-card {
+            background: #F9FAFB;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .question-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #6366F1;
+        }
+        .delete-question {
+            background: #FEE2E2;
+            color: #DC2626;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .delete-question:hover { background: #FECACA; }
+        .option-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .option-input {
+            flex: 1;
+        }
+        .correct-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .correct-label {
+            font-size: 14px;
+            color: #6B7280;
+            white-space: nowrap;
+        }
+        .add-question {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .add-question:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+        .btn {
+            flex: 1;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #1F2937;
+        }
+        .btn-secondary:hover { background: #D1D5DB; }
+        .btn-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .preview-modal.active { display: flex; }
+        .preview-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+        }
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .close-preview {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            color: #6B7280;
+        }
+        .preview-question {
+            background: #F9FAFB;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .preview-question h3 {
+            color: #1F2937;
+            margin-bottom: 16px;
+        }
+        .preview-option {
+            padding: 12px;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .preview-option.correct {
+            border-color: #10B981;
+            background: #D1FAE5;
+        }
+        .template-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #E5E7EB;
+            color: #1F2937;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+        .template-btn:hover { background: #D1D5DB; }
+        @media (max-width: 768px) {
+            .actions { flex-direction: column; }
+            .stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn" onclick="goBack()">← Back</button>
+        <div class="logo"><h1>📚 EduReach</h1></div>
+        <button class="template-btn" onclick="loadTemplate()">📋 Load Template</button>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>📝 Quiz Builder</h1>
+                <p>Create custom quizzes for your students</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="questionCount">0</div>
+                    <div class="stat-label">Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalPoints">0</div>
+                    <div class="stat-label">Total Points</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="timeLimit">15</div>
+                    <div class="stat-label">Minutes</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="quizTitle">Quiz Title *</label>
+                <input type="text" id="quizTitle" placeholder="e.g., Calculus Basics Quiz" required>
+            </div>
+
+            <div class="form-group">
+                <label for="course">Course *</label>
+                <select id="course" required>
+                    <option value="">Select a course</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Computer Science">Computer Science</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="timeLimitInput">Time Limit (minutes) *</label>
+                <input type="number" id="timeLimitInput" min="5" max="180" value="15" onchange="updateTimeLimit()">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Quiz Description</label>
+                <textarea id="description" rows="3" placeholder="Brief description of the quiz..."></textarea>
+            </div>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <button class="add-question" onclick="addQuestion()">
+            <span>➕</span>
+            <span>Add Question</span>
+        </button>
+
+        <div class="card">
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="saveAsDraft()">💾 Save as Draft</button>
+                <button class="btn btn-primary" onclick="previewQuiz()">👁️ Preview</button>
+                <button class="btn btn-success" onclick="publishQuiz()">🚀 Publish Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <h2 id="previewTitle">Quiz Preview</h2>
+                <button class="close-preview" onclick="closePreview()">×</button>
+            </div>
+            <div id="previewContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let questionCounter = 0;
+
+        function goBack() {
+            if (questions.length > 0) {
+                if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                    window.location.href = 'teacher-dashboard.html';
+                }
+            } else {
+                window.location.href = 'teacher-dashboard.html';
+            }
+        }
+
+        function updateTimeLimit() {
+            const time = document.getElementById('timeLimitInput').value;
+            document.getElementById('timeLimit').textContent = time;
+        }
+
+        function updateStats() {
+            document.getElementById('questionCount').textContent = questions.length;
+            document.getElementById('totalPoints').textContent = questions.length * 10;
+        }
+
+        function addQuestion() {
+            questionCounter++;
+            const questionId = 'q' + questionCounter;
+            
+            const questionHTML = `
+                <div class="card question-card" id="${questionId}">
+                    <div class="question-header">
+                        <div class="question-number">Question ${questionCounter}</div>
+                        <button class="delete-question" onclick="deleteQuestion('${questionId}')">🗑️ Delete</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Question Text *</label>
+                        <textarea rows="2" placeholder="Enter your question..." class="question-text" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Answer Options</label>
+                        <div class="options-container">
+                            <div class="option-group">
+                                <input type="text" class="option-input" placeholder="Option A" data-option="A">
+                                <input type="checkbox" class="correct-checkbox" data-option="A">
+                                <span class="correct-label">Correct</span>
+                            </div>
+                            <div class="option-group">
+                                <input type="text" class="option-input" placeholder="Option B" data-option="B">
+                                <input type="checkbox" class="correct-checkbox" data-option="B">
+                                <span class="correct-label">Correct</span>
+                            </div>
+                            <div class="option-group">
+                                <input type="text" class="option-input" placeholder="Option C" data-option="C">
+                                <input type="checkbox" class="correct-checkbox" data-option="C">
+                                <span class="correct-label">Correct</span>
+                            </div>
+                            <div class="option-group">
+                                <input type="text" class="option-input" placeholder="Option D" data-option="D">
+                                <input type="checkbox" class="correct-checkbox" data-option="D">
+                                <span class="correct-label">Correct</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', questionHTML);
+            questions.push({ id: questionId, number: questionCounter });
+            updateStats();
+            document.getElementById(questionId).scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function deleteQuestion(questionId) {
+            if (confirm('Delete this question?')) {
+                document.getElementById(questionId).remove();
+                questions = questions.filter(q => q.id !== questionId);
+                updateStats();
+                renumberQuestions();
+            }
+        }
+
+        function renumberQuestions() {
+            const questionCards = document.querySelectorAll('.question-card');
+            questionCards.forEach((card, index) => {
+                card.querySelector('.question-number').textContent = `Question ${index + 1}`;
+                questions[index].number = index + 1;
+            });
+        }
+
+        function getQuizData() {
+            const title = document.getElementById('quizTitle').value.trim();
+            const course = document.getElementById('course').value;
+            const timeLimit = document.getElementById('timeLimitInput').value;
+            const description = document.getElementById('description').value.trim();
+
+            if (!title) { alert('Please enter a quiz title!'); return null; }
+            if (!course) { alert('Please select a course!'); return null; }
+            if (questions.length === 0) { alert('Please add at least one question!'); return null; }
+
+            const questionData = [];
+            const questionCards = document.querySelectorAll('.question-card');
+            
+            for (let card of questionCards) {
+                const questionText = card.querySelector('.question-text').value.trim();
+                if (!questionText) { alert('Please fill in all question texts!'); return null; }
+
+                const options = [];
+                const correctAnswers = [];
+                const optionInputs = card.querySelectorAll('.option-input');
+                const checkboxes = card.querySelectorAll('.correct-checkbox');
+
+                let hasCorrect = false;
+                optionInputs.forEach((input, index) => {
+                    const optionText = input.value.trim();
+                    if (optionText) {
+                        options.push({ letter: input.dataset.option, text: optionText });
+                        if (checkboxes[index].checked) {
+                            correctAnswers.push(input.dataset.option);
+                            hasCorrect = true;
+                        }
+                    }
+                });
+
+                if (options.length < 2) { alert('Each question must have at least 2 options!'); return null; }
+                if (!hasCorrect) { alert('Each question must have at least one correct answer!'); return null; }
+
+                questionData.push({
+                    question: questionText,
+                    options: options,
+                    correctAnswers: correctAnswers
+                });
+            }
+
+            return {
+                id: 'quiz_' + Date.now(),
+                title: title,
+                course: course,
+                timeLimit: parseInt(timeLimit),
+                description: description,
+                questions: questionData,
+                createdBy: JSON.parse(localStorage.getItem('edureach_user')).username,
+                createdAt: new Date().toISOString()
+            };
+        }
+
+        function previewQuiz() {
+            const quizData = getQuizData();
+            if (!quizData) return;
+
+            let previewHTML = `
+                <h2>${quizData.title}</h2>
+                <p><strong>Course:</strong> ${quizData.course}</p>
+                <p><strong>Time:</strong> ${quizData.timeLimit} min | <strong>Questions:</strong> ${quizData.questions.length}</p>
+                ${quizData.description ? '<p>' + quizData.description + '</p>' : ''}
+                <hr style="margin: 20px 0; border: 1px solid #E5E7EB;">
+                ${quizData.questions.map((q, i) => `
+                    <div class="preview-question">
+                        <h3>Q${i + 1}. ${q.question}</h3>
+                        ${q.options.map(opt => `
+                            <div class="preview-option ${q.correctAnswers.includes(opt.letter) ? 'correct' : ''}">
+                                ${opt.letter}) ${opt.text} ${q.correctAnswers.includes(opt.letter) ? '✓' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}
+            `;
+
+            document.getElementById('previewContent').innerHTML = previewHTML;
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+
+        function saveAsDraft() {
+            const quizData = getQuizData();
+            if (!quizData) return;
+            quizData.status = 'draft';
+            let drafts = JSON.parse(localStorage.getItem('quiz_drafts') || '[]');
+            drafts.push(quizData);
+            localStorage.setItem('quiz_drafts', JSON.stringify(drafts));
+            alert('✅ Quiz saved as draft!');
+        }
+
+        function publishQuiz() {
+            const quizData = getQuizData();
+            if (!quizData) return;
+
+            if (confirm('Publish this quiz? Students will be able to take it immediately.')) {
+                quizData.status = 'published';
+                let quizzes = JSON.parse(localStorage.getItem('published_quizzes') || '[]');
+                quizzes.push(quizData);
+                localStorage.setItem('published_quizzes', JSON.stringify(quizzes));
+                alert('🚀 Quiz published successfully!\n\nStudents can now take this quiz.');
+                setTimeout(() => window.location.href = 'teacher-dashboard.html', 1500);
+            }
+        }
+
+        function loadTemplate() {
+            if (confirm('Load sample quiz? This will replace your current work.')) {
+                document.getElementById('quizTitle').value = 'Calculus Basics Quiz';
+                document.getElementById('course').value = 'Mathematics';
+                document.getElementById('description').value = 'Test your understanding of basic calculus.';
+                
+                document.getElementById('questionsContainer').innerHTML = '';
+                questions = [];
+                questionCounter = 0;
+                
+                addQuestion();
+                setTimeout(() => {
+                    const q1 = document.querySelectorAll('.question-card')[0];
+                    q1.querySelector('.question-text').value = 'What is the derivative of x²?';
+                    const opts1 = q1.querySelectorAll('.option-input');
+                    opts1[0].value = '2x';
+                    opts1[1].value = 'x²';
+                    opts1[2].value = '2';
+                    opts1[3].value = 'x';
+                    q1.querySelectorAll('.correct-checkbox')[0].checked = true;
+                }, 100);
+                
+                setTimeout(() => {
+                    addQuestion();
+                    setTimeout(() => {
+                        const q2 = document.querySelectorAll('.question-card')[1];
+                        q2.querySelector('.question-text').value = 'What is lim(sin x/x) as x→0?';
+                        const opts2 = q2.querySelectorAll('.option-input');
+                        opts2[0].value = '1';
+                        opts2[1].value = '0';
+                        opts2[2].value = '∞';
+                        opts2[3].value = 'Undefined';
+                        q2.querySelectorAll('.correct-checkbox')[0].checked = true;
+                    }, 100);
+                }, 500);
+                
+                updateStats();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('edureach_user') || '{}');
+            if (!user.loggedIn || user.role !== 'teacher') {
+                alert('Only teachers can access Quiz Builder!');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
